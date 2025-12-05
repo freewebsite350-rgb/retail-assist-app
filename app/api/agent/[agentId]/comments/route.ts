@@ -4,9 +4,9 @@ import { createMockAdminSupabaseClient } from '@/lib/supabase/mock-client';
 import { callOpenAI } from '@/lib/openai/mock';
 import { callOpenAIChat } from '@/lib/openai/server';
 
-export async function POST(request: Request, { params }: { params: { agentId: string } }) {
+export async function POST(request: Request, { params }: { params: Promise<{ agentId: string }> }) {
   try {
-    const { agentId } = params;
+    const { agentId } = await params;
     const body = await request.json();
     const { author_email, content } = body;
     if (!content) return NextResponse.json({ error: 'Missing content' }, { status: 400 });

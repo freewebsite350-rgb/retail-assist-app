@@ -2,7 +2,7 @@
 import { NormalizedCommentEvent, AutomationRule } from '@/lib/meta/types';
 import { sendDm } from '@/lib/meta/sendDm';
 import { sendPublicReply } from '@/lib/meta/publicReply';
-import { createClient } from '@/lib/supabase/server';
+import { createServerSupabaseClient } from '@/lib/supabase/server';
 
 interface RunCommentAutomationArgs {
   event: NormalizedCommentEvent;
@@ -17,7 +17,7 @@ export async function runCommentAutomation({ event, platform, raw }: RunCommentA
   }
 
   // 2. Find workspace by pageId (assume mapping exists)
-  const supabase = createClient();
+  const supabase = await createServerSupabaseClient();
   const { data: workspace } = await supabase
     .from('workspaces')
     .select('id, meta_page_id')

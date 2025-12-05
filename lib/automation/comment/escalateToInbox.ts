@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/server';
+import { createServerSupabaseClient } from '@/lib/supabase/server';
 
 interface EscalateToInboxArgs {
   workspaceId: string;
@@ -8,7 +8,7 @@ interface EscalateToInboxArgs {
 }
 
 export async function escalateToInbox({ workspaceId, commentId, username, content }: EscalateToInboxArgs) {
-  const supabase = createClient();
+  const supabase = await createServerSupabaseClient();
   await supabase.from('messages').insert({
     workspace_id: workspaceId,
     user_id: null,

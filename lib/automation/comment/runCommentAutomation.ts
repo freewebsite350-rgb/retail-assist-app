@@ -3,7 +3,7 @@ import { isTriggerMatch } from './isTriggerMatch';
 import { sendPublicReply } from './sendPublicReply';
 import { sendDm } from './sendDm';
 import { escalateToInbox } from './escalateToInbox';
-import { createClient } from '@/lib/supabase/server';
+import { createServerSupabaseClient } from '@/lib/supabase/server';
 
 interface RunCommentAutomationArgs {
   workspaceId: string;
@@ -14,7 +14,7 @@ interface RunCommentAutomationArgs {
 }
 
 export async function runCommentAutomation({ workspaceId, comment, rule, pageAccessToken, aiAgent }: RunCommentAutomationArgs) {
-  const supabase = createClient();
+  const supabase = await createServerSupabaseClient();
   let publicReplyResult = null;
   let dmResult = null;
   let inboxEscalation = null;

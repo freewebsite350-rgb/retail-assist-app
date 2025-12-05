@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import AgentForm from "@/components/AgentForm";
-import ApiKeyDisplay from '@/app/components/ApiKeyDisplay';
+import ApiKeyDisplay from '@/components/ApiKeyDisplay';
 
 export default function NewAgentPage() {
   const router = useRouter();

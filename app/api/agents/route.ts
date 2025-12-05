@@ -8,11 +8,7 @@ export async function POST(request: Request) {
     const isTestMode = process.env.NEXT_PUBLIC_TEST_MODE === 'true';
     const supabase = isTestMode ? createMockAdminSupabaseClient() : await createServerSupabaseClient();
 
-    const { data: { session }, error: sessionErr } = await supabase.auth.getSession();
-    if (sessionErr && !isTestMode) {
-      console.error('supabase auth error', sessionErr);
-      return NextResponse.json({ error: 'Auth error' }, { status: 500 });
-    }
+    const { data: { session } } = await supabase.auth.getSession();
     if (!session && !isTestMode) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     const body = await request.json();

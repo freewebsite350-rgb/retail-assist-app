@@ -1,5 +1,5 @@
 // lib/meta/comment.ts
-import { PlatformCommentEvent, NormalizedCommentEvent } from './types';
+import { NormalizedCommentEvent } from './types';
 
 export function detectCommentEvent(body: any): {
   isComment: boolean;

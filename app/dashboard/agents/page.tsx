@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { createServerSupabaseClient } from '@/lib/supabase/server';
-import ApiKeyDisplay from '@/app/components/ApiKeyDisplay';
+import ApiKeyDisplay from '@/components/ApiKeyDisplay';
 
 export default async function AgentsPage(){
   const supabase = await createServerSupabaseClient();

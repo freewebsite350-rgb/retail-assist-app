@@ -5,9 +5,9 @@ import { createMockAdminSupabaseClient } from '@/lib/supabase/mock-client';
 import { callOpenAIChat } from '@/lib/openai/server';
 import { callOpenAI } from '@/lib/openai/mock';
 
-export async function POST(request: Request, { params }: { params: { agentId: string } }) {
+export async function POST(request: Request, { params }: { params: Promise<{ agentId: string }> }) {
   try {
-    const { agentId } = params;
+    const { agentId } = await params;
     const body = await request.json();
     const message = body.message;
     if (!message) return NextResponse.json({ error: 'Missing message' }, { status: 400 });
@@ -47,11 +47,7 @@ export async function POST(request: Request, { params }: { params: { agentId: st
       }
     } else {
       // Require authenticated session for non-API-key requests
-      const { data: { session }, error: sessionErr } = await supabase.auth.getSession();
-      if (sessionErr && !isTestMode) {
-        console.error('auth error', sessionErr);
-        return NextResponse.json({ error: 'Auth error' }, { status: 500 });
-      }
+      const { data: { session } } = await supabase.auth.getSession();
       if (!session && !isTestMode) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
       // Fetch agent config

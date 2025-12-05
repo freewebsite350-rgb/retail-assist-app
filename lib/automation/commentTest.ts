@@ -1,6 +1,6 @@
 // lib/automation/commentTest.ts
 import { NormalizedCommentEvent } from '@/lib/meta/types';
-import { createClient } from '@/lib/supabase/server';
+import { createServerSupabaseClient } from '@/lib/supabase/server';
 
 interface RunCommentAutomationArgs {
   event: NormalizedCommentEvent;
@@ -12,7 +12,7 @@ export async function runCommentAutomationTest({ event, platform, raw }: RunComm
   if (event.isFromPage) {
     return { ok: true, ignored: true, reason: 'from page itself' };
   }
-  const supabase = createClient();
+  const supabase = await createServerSupabaseClient();
   const { data: workspace } = await supabase
     .from('workspaces')
     .select('id, meta_page_id')

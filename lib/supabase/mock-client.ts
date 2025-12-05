@@ -23,11 +23,10 @@ interface MockSupabaseClient {
   };
   from: (table: string) => {
     select: (fields?: string) => any;
-    insert: (data: any) => Promise<any>;
+    insert: (data: any) => any;
     update: (data: any) => any;
     delete: () => any;
     eq: (col: string, val: any) => any;
-    maybeSingle: () => Promise<any>;
   };
 }
 
@@ -90,7 +89,7 @@ export function createMockSupabaseClient(): MockSupabaseClient {
                 async maybeSingle() {
                   if (table === "agents") {
                     const mockAgents = getMockAgents();
-                    const agents = Array.from(mockAgents.values()).filter((a) => a[col] === val);
+                    const agents = Array.from(mockAgents.values()).filter((a: any) => a[col] === val);
                     return { data: agents[0] || null, error: null };
                   }
                   return { data: null, error: null };
@@ -99,7 +98,7 @@ export function createMockSupabaseClient(): MockSupabaseClient {
               async maybeSingle() {
                 if (table === "agents") {
                   const mockAgents = getMockAgents();
-                  const agents = Array.from(mockAgents.values()).filter((a) => a[col] === val);
+                  const agents = Array.from(mockAgents.values()).filter((a: any) => a[col] === val);
                   return { data: agents[0] || null, error: null };
                 }
                 return { data: null, error: null };
@@ -116,19 +115,27 @@ export function createMockSupabaseClient(): MockSupabaseClient {
           };
         },
 
-        async insert(data: any) {
+        insert(data: any): any {
+          const insertData = Array.isArray(data) ? data[0] : data;
+          let resultData: any = insertData;
+          
           if (table === "agents") {
             const id = `agent_${Date.now()}`;
             const mockAgents = getMockAgents();
-            mockAgents.set(id, { id, ...data, created_at: new Date().toISOString() });
-            return { data: { id, ...data }, error: null };
-          }
-          if (table === "agent_logs") {
+            resultData = { id, ...insertData, created_at: new Date().toISOString() };
+            mockAgents.set(id, resultData);
+          } else if (table === "agent_logs") {
             const mockLogs = getMockLogs();
-            mockLogs.push(data);
-            return { data, error: null };
+            mockLogs.push(insertData);
           }
-          return { data, error: null };
+          
+          const result = { data: resultData, error: null };
+          const chainable = {
+            select: () => ({
+              single: () => Promise.resolve(result),
+            }),
+          };
+          return Object.assign(Promise.resolve(result), chainable);
         },
 
         update(data: any) {

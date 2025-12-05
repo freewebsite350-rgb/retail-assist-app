@@ -10,7 +10,6 @@ export default function AgentChatPage({ params }: { params: { id: string } }) {
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const bottomRef = useRef<HTMLDivElement | null>(null);
-  import CommentBox from '@/components/CommentBox';
 
   useEffect(() => {
     // load recent logs (placeholder)

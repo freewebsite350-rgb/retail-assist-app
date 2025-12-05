@@ -12,6 +12,7 @@ export default function ApiKeyDisplay({ apiKey }: { apiKey?: string | null }) {
   const masked = maskApiKey(apiKey, 10);
 
   async function copyKey() {
+    if (!apiKey) return;
     try {
       await navigator.clipboard.writeText(apiKey);
       setCopied(true);
