@@ -6,10 +6,14 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test:basic": "node ./scripts/test-mask.js"
   },
   "dependencies": {
+    "@supabase/ssr": "^0.4.1",
+    "@supabase/supabase-js": "^2.86.2",
     "next": "16.0.7",
+    "openai": "^4.104.0",
     "react": "19.2.0",
     "react-dom": "19.2.0"
   },
